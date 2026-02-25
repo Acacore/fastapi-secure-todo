@@ -1,7 +1,9 @@
-from sqlmodel import SQLModel, Field
-from typing import Optional, Annotated
+from sqlmodel import SQLModel, Field, Column
+from typing import Optional
+from sqlalchemy import DateTime
 import uuid
 from datetime import datetime, timezone
+
 
 
 class ToDo(SQLModel, table=True):
@@ -11,7 +13,6 @@ class ToDo(SQLModel, table=True):
     completed: bool = False
 created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 updated_at: datetime = Field(
-default_factory=lambda: datetime.now(timezone.utc),
-sa_onupdate=lambda: datetime.now(timezone.utc)
-)
+        sa_column=Column(DateTime(timezone=True), default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
+    )
 completed_at: Optional[datetime] = None

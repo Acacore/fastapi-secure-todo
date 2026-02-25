@@ -4,7 +4,14 @@ from sqlalchemy import DateTime
 import uuid
 from datetime import datetime, timezone
 
+from fastapi_users_db_sqlmodel import SQLModelBaseUserDB
+from sqlmodel import SQLModel, Field, create_engine, Session, select
 
+
+
+class User(SQLModelBaseUserDB, SQLModel, table=True):
+    first_name: str = Field(nullable=False)
+    last_name: str = Field(nullable=False)
 
 class ToDo(SQLModel, table=True):
     id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)

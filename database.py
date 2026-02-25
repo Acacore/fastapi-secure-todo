@@ -1,6 +1,10 @@
 from sqlmodel import SQLModel, Field, create_engine, Session
 from typing import Generator
-from models import ToDo
+from models import ToDo, User
+from fastapi import Depends
+from fastapi_users_db_sqlmodel import SQLModelUserDatabase
+
+
 
 # SQLite URL (simple file-based database)
 DATABASE_URL = "sqlite:///./todo.db"
@@ -17,3 +21,7 @@ def create_db_and_tables():
 def get_session() -> Generator[Session, None, None]:
     with Session(engine) as session:
         yield session
+
+
+def get_user_db(session: Session = Depends(get_session)):
+    yield SQLModelUserDatabase(session, User)

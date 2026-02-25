@@ -1,0 +1,35 @@
+# This request retrieves all the to-do items from the server.
+GET http://localhost:8000/todos
+
+
+###
+POST http://localhost:8000/auth/register
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "securepassword123",
+  "first_name": "John",
+  "last_name": "Doe"
+}
+
+###
+POST http://127.0.0.1:8000/auth/jwt/login
+Content-Type: application/x-www-form-urlencoded
+
+username=john.doe@example.com&password=securepassword123
+
+
+###
+
+DELETE http://localhost:8000/user/{user_id}
+
+###
+POST http://localhost:8000/todos
+Content-Type: application/json
+{
+  "title": "Buy groceries",
+  "description": "Milk, Bread, Eggs, and Fruits",
+  "completed": false,
+  "user_id": "123e4567-e89b-12d3-a456-426614174000"
+}

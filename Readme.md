@@ -1,183 +1,189 @@
 # Secure FastAPI To-Do API
 
-A production-ready Task Management API built with **FastAPI**, **SQLModel**, and **FastAPI Users**. This system features stateless **JWT Authentication** and strict **Owner-Based Access Control (OBAC)** to ensure data privacy and security.
+A **production-ready** Task Management REST API built with:
 
+- **FastAPI**  
+- **SQLModel** (SQLAlchemy + Pydantic)  
+- **FastAPI Users** (authentication)
 
+Features **stateless JWT authentication** and strict **Owner-Based Access Control (OBAC)** — users can only see and modify **their own** tasks.
 
-## Key Features
-* **JWT Authentication:** Secure, stateless sessions using JSON Web Tokens.
-* **Multi-User Support:** Users can only manage their own tasks.
-* **Full CRUD:** Create, Read, Update (Partial/PATCH), and Delete functionality.
-* **Auto-Timestamps:** Tracks `created_at`, `updated_at`, and `completed_at` automatically.
-* **Robust Validation:** 4-tier Pydantic schema system (Base, Create, Update, Read) to prevent bad data.
+## ✨ Key Features
 
----
+- Secure JWT-based authentication (stateless)
+- Multi-user support with data isolation
+- Full CRUD operations on tasks
+- Partial updates (PATCH) supported
+- Automatic timestamps: `created_at`, `updated_at`, `completed_at`
+- 4-tier Pydantic validation schemas (Base, Create, Update, Read)
+- Alembic migrations for database versioning
+- SQLite support out of the box (easy to switch to PostgreSQL)
 
-## Getting Started
+## 🚀 Quick Start
 
 ### 1. Installation
+
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone <your-repository-url>
 cd ToDoList
 
 # Create and activate virtual environment
 python -m venv env
-source env/bin/activate  # Windows: env\Scripts\activate
+source env/bin/activate          # Linux/macOS
+# or
+.\env\Scripts\activate           # Windows
 
 # Install dependencies
 pip install -r requirements.txt
-
 ```
 
----
-### 2. Database Setup
-```bash
-#Initialize the SQLite database and run migrations
+### 2. Configuration
+Create a .env file in the project root:
+``` Bash 
+# .env
+SECRET_KEY=your-very-secure-random-string-here
+```
+###### Generate a strong secret key:
+``` Bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+⚠️ Important
+Never commit .env or the database file (todo.db) to version control.
+
+### 3. Database Setup
+``` Bash
+# Apply migrations (creates tables)
 alembic upgrade head
 ```
 
-
-### 3. Running the Application
-```bash
-# Running the app in the terminal
+### 4. Run the Application
+``` Bash
+# Development server with auto-reload
 fastapi dev main.py
+# or
+uvicorn main:app --reload
 
-# The API will be live at http://127.0.0.1:8000. Explore the interactive documentation at /docs.
+
+API will be available at:
+→ http://127.0.0.1:8000
+→ Interactive docs: http://127.0.0.1:8000/docs
 
 ```
+## 🔐 API Reference
 
-##### API Reference
-###### Authentication (Public)
+### Authentication (Public endpoints)
 
-Method,Endpoint,Description / Payload
-POST,/auth/register,"Create a new user account (email, password, names)"
-POST,/auth/jwt/login,Exchange credentials for a JWT Access Token
+| Method | Endpoint             | Description                              |
+|--------|----------------------|------------------------------------------|
+| POST   | `/auth/register`     | Create new user (email + password + name) |
+| POST   | `/auth/jwt/login`    | Login → receive JWT access token         |
 
-##### To-Do Management (Requires Authorization: Bearer <token>)
+### Task Management  
+*(requires `Authorization: Bearer <token>` header)*
 
-###### Method,Endpoint,Description
-GET,/todos/,List all tasks belonging to the authenticated user
-POST,/todos/,Create a new task
-GET,/todos/{id},Get details for a specific task by UUID
-PATCH,/todos/{id},"Partially update a task (e.g., mark as completed)"
-DELETE,/todos/{id},Permanently remove a task
+| Method | Endpoint          | Description                              |
+|--------|-------------------|------------------------------------------|
+| GET    | `/todos/`         | List all your tasks                      |
+| POST   | `/todos/`         | Create a new task                        |
+| GET    | `/todos/{id}`     | Get single task (by UUID)                |
+| PATCH  | `/todos/{id}`     | Partially update task (e.g. mark done)   |
+| DELETE | `/todos/{id}`     | Delete a task                            |
+## 📋 Example Usage Flow
 
----
+##### Register a User
 
-Gemini said
-Here is your complete, professional README.md content. You can copy this directly into a file named README.md in your project root.
+```http
+POST /auth/register HTTP/1.1
+Content-Type: application/json
 
-Markdown
-# 🚀 Secure FastAPI To-Do API
-
-A production-ready Task Management API built with **FastAPI**, **SQLModel**, and **FastAPI Users**. This system features stateless **JWT Authentication** and strict **Owner-Based Access Control (OBAC)** to ensure data privacy and security.
-
-
-
-## ✨ Key Features
-* **JWT Authentication:** Secure, stateless sessions using JSON Web Tokens.
-* **Multi-User Support:** Users can only manage their own tasks.
-* **Full CRUD:** Create, Read, Update (Partial/PATCH), and Delete functionality.
-* **Auto-Timestamps:** Tracks `created_at`, `updated_at`, and `completed_at` automatically.
-* **Robust Validation:** 4-tier Pydantic schema system (Base, Create, Update, Read) to prevent bad data.
-
----
-
-## 🚦 Getting Started
-
-### 1. Installation
-```bash
-# Clone the repository
-git clone <your-repo-url>
-cd ToDoList
-
-# Create and activate virtual environment
-python -m venv env
-source env/bin/activate  # Windows: env\Scripts\activate
+{
+  "email": "user@example.com",
+  "password": "strongpassword123",
+  "name": "John Doe"
+}
 ```
 
-# Install dependencies
-```bash pip install fastapi[all] sqlmodel fastapi-users[sqlalchemy] alembic```
+##### Login to Get Access Token
 
-2. Database Setup
-``` bash
-# Initialize the SQLite database and run migrations
-alembic upgrade head
-```
-3. Running the Application
-```bash
-fastapi dev main.py
-# The API will be live at http://127.0.0.1:8000. Explore the interactive documentation at /docs.
+Use **form data (OAuth2 password flow)**:
+
+```http
+POST /auth/jwt/login HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+username=user@example.com&password=strongpassword123
 ```
 
-#### API Reference
-Authentication (Public)
-Method	Endpoint	Payload
-POST	/auth/register	Create an account (email, password, names)
-POST	/auth/jwt/login	Login to receive a JWT Access Token
-To-Do Management (Requires Authorization: Bearer <token>)
-Method	Endpoint	Description
-GET	/todos/	List all tasks for the logged-in user
-POST	/todos/	Create a new task
-GET	/todos/{id}	Get a specific task by UUID
-PATCH	/todos/{id}	Partially update a task (e.g., mark as completed)
-DELETE	/todos/{id}	Remove a task permanently
+Response:
 
-🔑 Usage Guide (Example Flow)
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer"
+}
+```
 
-1. Register & Login
-First, register a user via /auth/register. Then, log in to get your token:
+##### Create a Task (Authenticated)
 
-Request:
-POST http://127.0.0.1:8000/auth/jwt/login
+```http
+POST /todos/ HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
 
-Body (Form-Data): username=john.doe@example.com&password=securepassword123
-
-2. Perform CRUD
-Use the access_token from the login response in the header for all subsequent calls:
-
-Header: Authorization: Bearer <your_token>
-
-Create a Task Example:
-
-
-Create a Task Example:JSON// POST /todos/
 {
   "title": "Buy groceries",
-  "description": "Milk, Eggs, and Bread"
+  "description": "Milk, eggs, bread"
 }
-Partial Update Example (Marking Done):JSON// PATCH /todos/<userId>
+```
+
+##### Mark Task as Completed (Partial Update)
+
+
+```http
+PATCH /todos/<task-uuid> HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
 {
   "completed": true
 }
+```
+#### Project Structure
 
-##### TroubleshootingError
+ToDoList/
+├── alembic.ini
+├── api.http
+├── database.py
+├── init_db.py
+├── main.py
+├── migrations
+│   ├── env.py
+│   ├── __pycache__
+│   │   └── env.cpython-313.pyc
+│   ├── README
+│   ├── script.py.mako
+│   └── versions
+│       ├── 4ab7aa792551_initial_migrations.py
+│       ├── cd9f02ee314b_initial_migrations.py
+│       └── __pycache__
+│           ├── 4ab7aa792551_initial_migrations.cpython-313.pyc
+│           └── cd9f02ee314b_initial_migrations.cpython-313.pyc
+├── models.py
+├── __pycache__
+│   ├── database.cpython-313.pyc
+│   ├── main.cpython-313.pyc
+│   ├── models.cpython-313.pyc
+│   ├── schemas.cpython-313.pyc
+│   └── users.cpython-313.pyc
+├── Readme.md
+├── requirements.txt
+├── schemas.py
+├── todo.db
+└── users.py
 
-Error Code,Meaning,Common Fix
-401 Unauthorized,Token missing or expired,Re-authenticate via /auth/jwt/login.
-403 Forbidden,Ownership mismatch,You are trying to access a task belonging to another user.
-422 Unprocessable,Validation Error,Your JSON body is missing a required field or has the wrong type.
-404 Not Found,Missing Resource,The UUID provided does not exist in the database.
+Lience
 
-### Project Structure
-
-main.py: Entry point and route definitions.
-
-models.py: SQLModel database definitions and relationships.
-
-schemas.py: Pydantic CRUD validation models.
-
-users.py: FastAPI Users authentication configuration.
-
-database.py: Session, engine, and database lifecycle setup.
-
-api.http: Full testing suite for VS Code REST Client.
-
-
-
-
-License
 MIT
 
-**Would you like me to help you set up the `.gitignore` file now to make sure you don't accidentally commit your `todo.db` or `env` folder?**
+**Would you like me to help you create a `.gitignore` file now to make sure you don't accidentally upload your database or environment files to GitHub?**

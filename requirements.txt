@@ -1,0 +1,10 @@
+fastapi
+pydantic
+sqlModel
+alembic
+passlib
+alembic
+fastapi-users-db-sqlmodel
+fastapi-users[jwt]
+python-dotenv
+

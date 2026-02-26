@@ -1,0 +1,26 @@
+# 1. Security & Data (What you just asked for)
+.env
+*.db
+
+# 2. Python Environment & Dependencies
+.venv/
+env/
+venv/
+bin/
+lib/
+include/
+
+# 3. Python Cache (Speeds up execution, but clutters Git)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 4. OS Specific files
+.DS_Store
+Thumbs.db
+
+__pycache__/
+*.pyc
+.env
+todo.db
+migrations/__pycache__/

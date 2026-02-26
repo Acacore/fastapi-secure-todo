@@ -21,15 +21,43 @@ username=john.doe@example.com&password=securepassword123
 
 
 ###
-
 DELETE http://localhost:8000/user/{user_id}
 
-###
-POST http://localhost:8000/todos
+
+### 
+### CREATE A TASK
+POST http://127.0.0.1:8000/todos/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzQ3ZDBhYi1jNDdmLTRkN2MtOWMzNi01YmZjMzgwNWRmNTEiLCJhdWQiOlsiZmFzdGFwaS11c2VyczphdXRoIl0sImV4cCI6MTc3MjAzODU0Mn0.JkuMS4rz_BnsXxPByQ25iKhZOUcykTtycEW64xDz7qw
 Content-Type: application/json
+
 {
   "title": "Buy groceries",
-  "description": "Milk, Bread, Eggs, and Fruits",
-  "completed": false,
-  "user_id": "123e4567-e89b-12d3-a456-426614174000"
+  "description": "Milk, Eggs, and Bread"
 }
+
+###
+
+### UPDATE ONLY THE STATUS
+PATCH http://127.0.0.1:8000/todos/3531d0ae20cb4f04adf8257df5013f2a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzQ3ZDBhYi1jNDdmLTRkN2MtOWMzNi01YmZjMzgwNWRmNTEiLCJhdWQiOlsiZmFzdGFwaS11c2VyczphdXRoIl0sImV4cCI6MTc3MjAzODU0Mn0.JkuMS4rz_BnsXxPByQ25iKhZOUcykTtycEW64xDz7qw
+Content-Type: application/json
+
+{
+  "completed": true
+}
+
+
+### GET THE WHOLE LIST
+GET http://127.0.0.1:8000/todos/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzQ3ZDBhYi1jNDdmLTRkN2MtOWMzNi01YmZjMzgwNWRmNTEiLCJhdWQiOlsiZmFzdGFwaS11c2VyczphdXRoIl0sImV4cCI6MTc3MjAzODk3MH0.l2vWidCn2yzLvErmZ23sWB13eIhedOEZ5chWfHMbrbk
+
+###
+
+### GET A SPECIFIC TASK
+# Replace with a real UUID from your list
+GET http://127.0.0.1:8000/todos/3531d0ae-20cb-4f04-adf8-257df5013f2a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzQ3ZDBhYi1jNDdmLTRkN2MtOWMzNi01YmZjMzgwNWRmNTEiLCJhdWQiOlsiZmFzdGFwaS11c2VyczphdXRoIl0sImV4cCI6MTc3MjAzODk3MH0.l2vWidCn2yzLvErmZ23sWB13eIhedOEZ5chWfHMbrbk
+
+### DELETE A TASK
+DELETE http://127.0.0.1:8000/todos/3531d0ae-20cb-4f04-adf8-257df5013f2a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzQ3ZDBhYi1jNDdmLTRkN2MtOWMzNi01YmZjMzgwNWRmNTEiLCJhdWQiOlsiZmFzdGFwaS11c2VyczphdXRoIl0sImV4cCI6MTc3MjAzODk3MH0.l2vWidCn2yzLvErmZ23sWB13eIhedOEZ5chWfHMbrbk

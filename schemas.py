@@ -21,9 +21,6 @@ class UserRead(schemas.BaseUser[uuid.UUID]):
     class Config:
         from_attributes = True # Use this instead of orm_mode = True
 
-
-
-
 class UserUpdate(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
@@ -34,24 +31,36 @@ class UserDelete(BaseModel):
     id: uuid.UUID
 
 
-class ToDoCreate(BaseModel):
+
+# BASE SCHEMA (Shared fields) ---
+class ToDoBase(BaseModel):
     title: str
     description: Optional[str] = None
+    completed: bool = False
 
-class ToDoRead(BaseModel):
-    id: uuid.UUID
-    title: str
-    description: Optional[str] = None
-    completed: bool
-    created_at: datetime
-    updated_at: datetime
-    completed_at: Optional[datetime] = None
 
+
+# CREATE SCHEMA (What the user sends) ---
+class ToDoCreate(ToDoBase):
+    pass # In this case, it's the same as Base
+
+
+
+# UPDATE SCHEMA (All fields optional for PATCH) ---
 class ToDoUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     completed: Optional[bool] = None
+    # We don't include user_id here because a user shouldn't change ownership
 
-class ToDoDelete(BaseModel):
+
+# READ SCHEMA (What the API returns) ---
+class ToDoRead(ToDoBase):
     id: uuid.UUID
+    user_id: uuid.UUID
+    created_at: datetime
+    updated_at: datetime
+    completed_at: Optional[datetime] = None
 
+    class Config:
+        from_attributes = True

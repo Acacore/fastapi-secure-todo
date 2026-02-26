@@ -44,7 +44,7 @@ pip install -r requirements.txt
 Create a .env file in the project root:
 ``` Bash 
 # .env
-SECRET_KEY=your-very-secure-random-string-here
+JWT_SECRET_KEY=your-very-secure-random-string-here
 ```
 ###### Generate a strong secret key:
 ``` Bash

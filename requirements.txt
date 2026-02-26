@@ -7,4 +7,6 @@ alembic
 fastapi-users-db-sqlmodel
 fastapi-users[jwt]
 python-dotenv
+uvicorn
+gunicorn
 

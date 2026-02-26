@@ -10,6 +10,7 @@ from models import User, ToDo
 from schemas import UserRead, CreateUser, UserUpdate, ToDoCreate, ToDoRead, ToDoUpdate
 from sqlmodel import Session
 from users import fastapi_users, auth_backend, get_user_manager
+from fastapi.middleware.cors import CORSMiddleware
 
 # LIFESPAN (Modern way to handle startup/shutdown)
 @asynccontextmanager
@@ -35,6 +36,12 @@ app.include_router(
     tags=["auth"],
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # In production, replace "*" with your frontend URL
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # REGISTRATION ROUTE
 # Provides: /auth/register

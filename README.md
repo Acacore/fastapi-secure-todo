@@ -27,7 +27,7 @@ Features **stateless JWT authentication** and strict **Owner-Based Access Contro
 
 ```bash
 # Clone the repository
-git clone <your-repository-url>
+git clone <https://github.com/Acacore/fastapi-secure-todo.git>
 cd ToDoList
 
 # Create and activate virtual environment
@@ -185,7 +185,4 @@ ToDoList/
 └── users.py
 
 Lience
-
 MIT
-
-**Would you like me to help you create a `.gitignore` file now to make sure you don't accidentally upload your database or environment files to GitHub?**
